@@ -11,7 +11,7 @@
 <br />
 
 ORCHER is a durable execution engine. You write workflows as ordinary async
-code in Python, TypeScript or Rust. The engine records each step as it
+code in Rust, TypeScript or Python. The engine records each step as it
 completes, so a crash, a deploy or a restart resumes the run where it stopped
 instead of starting it over, or losing it.
 
@@ -34,6 +34,19 @@ docker compose up -d --wait
 Then run the example worker in the language you like, kill it halfway through
 an order, and watch a new worker ship the order without charging it twice:
 
+```rust
+#[workflow(name = "order")]
+async fn order(ctx: WorkflowContext, order_id: String) -> Result<String> {
+    let charged: String = ctx.execute_task(charge, order_id.clone()).await?;
+    ctx.sleep(Duration::from_secs(10)).await?; // kept by the engine, not the worker
+    let shipped: String = ctx.execute_task(ship, order_id).await?;
+    Ok(format!("{charged}, then {shipped}"))
+}
+```
+
+<details>
+<summary>Show in Python</summary>
+
 ```python
 @workflow(name="order")
 async def order(ctx: WorkflowContext, order_id: str) -> str:
@@ -43,6 +56,25 @@ async def order(ctx: WorkflowContext, order_id: str) -> str:
     return f"{charged}, then {shipped}"
 ```
 
+</details>
+
+<details>
+<summary>Show in TypeScript</summary>
+
+```typescript
+@Workflow({ name: 'order' })
+export class Order {
+  async run(ctx: WorkflowContext, orderId: string): Promise<string> {
+    const charged = await ctx.executeTask(orderTasks.charge, orderId);
+    await ctx.sleep(Duration.fromSeconds(10)); // kept by the engine, not the worker
+    const shipped = await ctx.executeTask(orderTasks.ship, orderId);
+    return `${charged}, then ${shipped}`;
+  }
+}
+```
+
+</details>
+
 The full walkthrough is in [**orcher-io/quickstart**](https://github.com/orcher-io/quickstart).
 
 <br />
@@ -51,9 +83,9 @@ The full walkthrough is in [**orcher-io/quickstart**](https://github.com/orcher-
 
 | | Install | Repository |
 |---|---|---|
-| <img height="14" src="https://cdn.simpleicons.org/python/3776AB"> **Python** | `pip install orcher-sdk` | [sdk-py](https://github.com/orcher-io/sdk-py) <a href="https://pypi.org/project/orcher-sdk/"><img align="right" src="https://img.shields.io/pypi/v/orcher-sdk?style=flat-square&labelColor=0a0a0a&color=04B385&label=pypi" alt="PyPI"></a> |
-| <img height="14" src="https://cdn.simpleicons.org/typescript/3178C6"> **TypeScript** | `npm install @orcher/sdk` | [sdk-ts](https://github.com/orcher-io/sdk-ts) <a href="https://www.npmjs.com/package/@orcher/sdk"><img align="right" src="https://img.shields.io/npm/v/@orcher/sdk?style=flat-square&labelColor=0a0a0a&color=04B385&label=npm" alt="npm"></a> |
 | <img height="14" src="https://cdn.simpleicons.org/rust/CE422B"> **Rust** | `cargo add orcher-sdk` | [sdk-rust](https://github.com/orcher-io/sdk-rust) <a href="https://crates.io/crates/orcher-sdk"><img align="right" src="https://img.shields.io/crates/v/orcher-sdk?style=flat-square&labelColor=0a0a0a&color=04B385&label=crates.io" alt="crates.io"></a> |
+| <img height="14" src="https://cdn.simpleicons.org/typescript/3178C6"> **TypeScript** | `npm install @orcher/sdk` | [sdk-ts](https://github.com/orcher-io/sdk-ts) <a href="https://www.npmjs.com/package/@orcher/sdk"><img align="right" src="https://img.shields.io/npm/v/@orcher/sdk?style=flat-square&labelColor=0a0a0a&color=04B385&label=npm" alt="npm"></a> |
+| <img height="14" src="https://cdn.simpleicons.org/python/3776AB"> **Python** | `pip install orcher-sdk` | [sdk-py](https://github.com/orcher-io/sdk-py) <a href="https://pypi.org/project/orcher-sdk/"><img align="right" src="https://img.shields.io/pypi/v/orcher-sdk?style=flat-square&labelColor=0a0a0a&color=04B385&label=pypi" alt="PyPI"></a> |
 
 All three are built on [**sdk-core**](https://github.com/orcher-io/sdk-core),
 a shared Rust core that handles the connection, the workers and replay, so the
@@ -78,4 +110,4 @@ releases until 1.0, and every change is listed in each repository's changelog.
 - Security reports: privately, as described in our [security policy](https://github.com/orcher-io/.github/blob/main/SECURITY.md)
 - News: join the list at [orcher.io](https://orcher.io)
 
-<sub>Python, TypeScript and Rust logos are trademarks of their respective owners, shown to indicate the languages each SDK is for.</sub>
+<sub>Rust, TypeScript and Python logos are trademarks of their respective owners, shown to indicate the languages each SDK is for.</sub>
