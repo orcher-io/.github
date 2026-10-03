@@ -1,0 +1,90 @@
+name: Bug report
+description: Something in an SDK, the engine image or the quickstart does not work as documented.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. Questions belong in
+        [Discussions](https://github.com/orcher-io/quickstart/discussions), and a
+        suspected security problem must not be reported here: see the
+        [security policy](https://github.com/orcher-io/.github/blob/main/SECURITY.md).
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Where you see the problem. If unsure, pick the SDK you are using.
+      options:
+        - Python SDK (orcher-sdk on PyPI)
+        - TypeScript SDK (@orcher/sdk on npm)
+        - Rust SDK (orcher-sdk on crates.io)
+        - sdk-core (orcher-sdk-core)
+        - protos (orcher-proto)
+        - Engine image (ghcr.io/orcher-io/orcher)
+        - Quickstart
+    validations:
+      required: true
+  - type: input
+    id: sdk-version
+    attributes:
+      label: SDK version
+      description: The installed package version, for example `pip show orcher-sdk`, `npm ls @orcher/sdk` or `cargo tree -i orcher-sdk`.
+      placeholder: "0.5.0"
+    validations:
+      required: true
+  - type: input
+    id: engine-version
+    attributes:
+      label: Engine image version
+      description: The image tag you run, for example from `docker compose images`.
+      placeholder: "ghcr.io/orcher-io/orcher:0.5.2"
+    validations:
+      required: true
+  - type: input
+    id: runtime
+    attributes:
+      label: Language and runtime version
+      placeholder: "Python 3.12.4 / Node.js 22.9.0 / Rust 1.82.0"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: "macOS 15 (arm64) / Ubuntu 24.04 (x64)"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: The smallest workflow, task and commands that show the problem. A link to a small repository works too.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Worker and engine output around the failure (`docker compose logs orcher`). Remove API keys and other secrets first.
+      render: shell
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched the existing issues and did not find this one.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true
