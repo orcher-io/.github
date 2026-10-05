@@ -19,7 +19,7 @@ instead of starting it over, or losing it.
 - <img height="14" src="https://octicons-col.vercel.app/code/38BDF0"> **Plain code**: decorators and macros on async functions, with no DSL and no YAML
 - <img height="14" src="https://octicons-col.vercel.app/clock/38BDF0"> **Durable timers and events**: sleep for days or wait on an outside signal, with nothing kept running
 - <img height="14" src="https://octicons-col.vercel.app/iterations/38BDF0"> **Retries with intent**: per-task retry policies, and error types that are never retried
-- <img height="14" src="https://octicons-col.vercel.app/history/38BDF0"> **Replayed, not re-run**: a resumed run is rebuilt from its journal, so finished steps return the results they already had
+- <img height="14" src="https://octicons-col.vercel.app/history/38BDF0"> **Safe to change**: a resumed run is replayed from its journal, and code that no longer matches it is held with a clear error instead of taking a different path
 - <img height="14" src="https://octicons-col.vercel.app/zap/38BDF0"> **Written in Rust**: one small engine binary backed by Postgres
 
 <br />
